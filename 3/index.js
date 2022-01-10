@@ -4,12 +4,12 @@ const rotateMatrix = (matrix) => {
   const result = [];
 
   for (const rowIdx in matrix) {
-    const line = matrix[rowIdx];
-    for (const valueIdx in matrix[rowIdx]) {
+    const row = matrix[rowIdx];
+    for (const valueIdx in row) {
       if (!result[valueIdx]) {
         result[valueIdx] = [];
       }
-      result[valueIdx][rowIdx] = line[valueIdx];
+      result[valueIdx][rowIdx] = row[valueIdx];
     }
   }
   return result;
@@ -36,12 +36,11 @@ readFile("./input.txt").then((data) => {
     }
     const mostCommon = Math.max(...Object.values(countsMap));
     for (const key of Object.keys(countsMap)) {
-      const parsedKey = Number(key);
-      const value = countsMap[parsedKey];
+      const value = countsMap[key];
       if (value == mostCommon) {
-        gammaRate.push(parsedKey);
+        gammaRate.push(key);
       } else {
-        epsilonRate.push(parsedKey);
+        epsilonRate.push(key);
       }
     }
     countsMap = {};
