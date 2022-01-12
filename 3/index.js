@@ -1,49 +1,32 @@
 const readFile = require("../readFile");
 
-const rotateMatrix = (matrix) => {
-  const result = [];
-
-  for (const rowIdx in matrix) {
-    const row = matrix[rowIdx];
-    for (const valueIdx in row) {
-      if (!result[valueIdx]) {
-        result[valueIdx] = [];
-      }
-      result[valueIdx][rowIdx] = row[valueIdx];
-    }
-  }
-  return result;
-};
-
 const binaryToDecimal = (array) => parseInt(array.join(""), 2);
 
 readFile("./input.txt").then((data) => {
-  const lines = data.split("\n").map((value) => value.split("").map(Number));
-
-  const rotatedMatrix = rotateMatrix(lines);
+  const matrix = data.split("\n").map((value) => value.split("").map(Number));
 
   const gammaRate = [];
   const epsilonRate = [];
 
-  let countsMap = {};
+  const columnsCount = matrix[0].length;
 
-  for (const row of rotatedMatrix) {
-    for (const value of row) {
-      if (!countsMap[value]) {
-        countsMap[value] = 0;
-      }
-      countsMap[value] += 1;
+  let valuesMap = {};
+
+  for (let column = 0; column < columnsCount; column++) {
+    for (const rowIdx in matrix) {
+      const value = matrix[rowIdx][column];
+      valuesMap[value] = (valuesMap[value] ?? 0) + 1;
     }
-    const mostCommon = Math.max(...Object.values(countsMap));
-    for (const key of Object.keys(countsMap)) {
-      const value = countsMap[key];
-      if (value == mostCommon) {
+    const mostCommon = Math.max(...Object.values(valuesMap));
+    Object.keys(valuesMap).forEach((key) => {
+      const keyValue = valuesMap[key];
+      if (keyValue === mostCommon) {
         gammaRate.push(key);
       } else {
         epsilonRate.push(key);
       }
-    }
-    countsMap = {};
+    });
+    valuesMap = {};
   }
 
   const decimalGamma = binaryToDecimal(gammaRate);
